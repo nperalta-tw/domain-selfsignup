@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneCloud Domain SignUp</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+    <script type="text/javascript" src="../static/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="../static/js/materialize.min.js"></script>
+    <script type="text/javascript" src="../static/js/scripts.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/materializeicons.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=MaterialIcons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <meta http-equiv="Content-Security-Policy" 
+          content="script-src 'unsafe-inline' 'self' http://192.168.8.169:8085/*"                  
+    >
+  </head>  
+  <body>
+    <div id="containerOuterLogin" class="valign-wrapper">
+      <div class="container container-login">
+        <div id="cardContainer" class="card z-depth-5" style="padding: 15px;">
+          <div class="card-image" style="padding: 0px;">
+            <img src="../static/img/OneCloud_Logo.png" alt="OneCloud Logo">
+          </div>
+          <div id="login-text" style="width:330px;font-size:90%;text-align:center; 
+																			padding-top:10px;padding-left:10px;
+																			padding-right: 10px;"
+					>
+							Example creating a new domain... Please enter the data below.
+					</div>
+          <div id="login-form">
+            <form action="/domainadd" method="POST" id="form">
+              <p>
+                <label for="reseller">Reseller Name:</label>
+                <input type="text" id="reseller" name="reseller" autofocus 
+                       autocapitalize="none" maxlength="150"
+                >
+              </p>
+              <p>
+                <label for="domain">Preferred Domain Name:</label>
+                <input type="text" id="domain" name="domain" autofocus>
+              </p>
+              <p>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" autofocus 
+                       autocapitalize="none" autocomplete="email" 
+                       maxlength="150" required id="email"
+                >
+              </p>
+              <div class="row">
+                <button type="submit" id="submitBtn"
+                        class="btn waves-effect waves-light 
+                               col s12 login-button"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
