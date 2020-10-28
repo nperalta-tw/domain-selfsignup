@@ -12,8 +12,6 @@ BASE_URL = config['NS']['NS_URL']
 ACCESS_TOKEN_URL = ''.join([BASE_URL, '/oauth2/token'])
 AUTH_URL = ''.join([BASE_URL, '/oauth2/auth'])
 
-PIN = [random.randint(0,9) for _ in range(8)]
-
 def get_ns_response_data(parameters, access_token):
   headers = {'Authorization': 'Bearer {}'.format(access_token)}
   response = requests.get(url, params=parameters, headers=headers)
@@ -147,12 +145,12 @@ def assign_did(domain, DID, access_token):
         'plan_description': "Assigned to " . domain
   }
   DIDs = get_ns_response_data(parameters, access_token)
-  newDID = DIDs.split(':')[1].split('@')[0]
+  new_did = DIDs.split(':')[1].split('@')[0]
 
-  return newDID
+  return new_did
 
-def add_domain_user(reseller, domain, newDID, access_token):
-  area_code = newDID[0:3]
+def add_domain_user(reseller, domain, new_did, pin, access_token):
+  area_code = new_did[0:3]
   
   parameters = {
     'object': 'subscriber',
@@ -168,10 +166,10 @@ def add_domain_user(reseller, domain, newDID, access_token):
     'srv_code': 'system-user',
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN
+    'subscriber_pin': pin
   }
 
   data = get_ns_response_data(parameters, access_token)
@@ -191,16 +189,16 @@ def add_domain_user(reseller, domain, newDID, access_token):
     'scope': 'No Portal',
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
-    'subscriber_pin': PIN
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
+    'subscriber_pin': pin
   }
 
   data = get_ns_response_data(parameters, access_token)
 
   return area_code
 
-def add_department(reseller, domain, newDID, department, access_token):
+def add_department(reseller, domain, new_did, department, pin, access_token):
   parameters = {
     'object': 'subscriber',
     'action': "create",
@@ -210,19 +208,19 @@ def add_department(reseller, domain, newDID, department, access_token):
     'name': department['name'],
     'user': department['user'],
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'directory_match': 'departments',
     'dir': 'departments',
     'dir_list': "no",
     'dir_anc': "no",
     'srv_code': 'system-department',
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN
+    'subscriber_pin': pin
   }
   data = get_ns_response_data(parameters, access_token)
 
-def add_reseller_user(reseller, domain, newDID, access_token):
+def add_reseller_user(reseller, domain, new_did, pin, access_token):
   #Create user
   parameters = {
     'object': 'subscriber',
@@ -232,11 +230,11 @@ def add_reseller_user(reseller, domain, newDID, access_token):
     'scope': "Reseller",
     'user': '1000',
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'department': 'Tech',
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN
+    'subscriber_pin': pin
   }
 
   data = get_ns_response_data(parameters, access_token)
@@ -270,7 +268,7 @@ def add_reseller_user(reseller, domain, newDID, access_token):
 
   data = get_ns_response_data(parameters, access_token)
 
-def add_office_manager_user(reseller, domain, newDID, area_code, access_token):
+def add_office_manager_user(reseller, domain, new_did, area_code, pin, access_token):
   parameters {
     'object': 'subscriber',
     'action': "create",
@@ -286,10 +284,10 @@ def add_office_manager_user(reseller, domain, newDID, area_code, access_token):
     'department': 'Tech',
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN
+    'subscriber_pin': pin
   }
 
   data = get_ns_response_data(parameters, access_token)
@@ -323,7 +321,7 @@ def add_office_manager_user(reseller, domain, newDID, area_code, access_token):
 
   return data
 
-def add_supervisor_user(reseller, domain, newDID, area_code, access_token):
+def add_supervisor_user(reseller, domain, new_did, area_code, pin, access_token):
   parameters {
     'object': 'subscriber',
     'action': "create",
@@ -337,10 +335,10 @@ def add_supervisor_user(reseller, domain, newDID, area_code, access_token):
     'dir_anc': "yes",
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN
+    'subscriber_pin': pin
   }
 
   data = get_ns_response_data(parameters, access_token)
@@ -374,7 +372,7 @@ def add_supervisor_user(reseller, domain, newDID, area_code, access_token):
 
   return data
 
-def add_basic_user(reseller, domain, newDID, area_code, access_token):
+def add_basic_user(reseller, domain, new_did, area_code, pin, access_token):
   parameters {
     'object': 'subscriber',
     'action': "create",
@@ -388,11 +386,11 @@ def add_basic_user(reseller, domain, newDID, area_code, access_token):
     'dir_anc': "yes",
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'department': 'Sales',
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN 
+    'subscriber_pin': pin 
   }
   
   data = get_ns_response_data(parameters, access_token)
@@ -426,7 +424,7 @@ def add_basic_user(reseller, domain, newDID, area_code, access_token):
 
   return data
 
-def add_route_manager_user(reseller, domain, newDID, area_code, access_token):
+def add_route_manager_user(reseller, domain, new_did, area_code, pin, access_token):
   parameters {
     'object': 'subscriber',
     'action': "create",
@@ -440,10 +438,10 @@ def add_route_manager_user(reseller, domain, newDID, area_code, access_token):
     'dir_anc': "yes",
     'area_code': area_code,
     'callid_name': reseller,
-    'callid_nmbr': newDID,
-    'callid_emgr': newDID,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
     'vmail_transcribe': "mutare",
-    'subscriber_pin': PIN   
+    'subscriber_pin': pin   
   }
 
   data = get_ns_response_data(parameters, access_token)
@@ -477,20 +475,296 @@ def add_route_manager_user(reseller, domain, newDID, area_code, access_token):
 
   return data
 
+def add_call_queue_sales(reseller, domain, new_did, area_code, pin, access_token):
+  parameters = {
+    'object': 'subscriber',
+    'action': "create",
+    'domain': domain,
+    'scope': "Basic User",
+    'first_name': "Sales",
+    'last_name': "Call Queue",
+    'dir_list': "no",
+    'dir_anc': "no",
+    'user': '2000',
+    'srv_code': 'system-queue',
+    'area_code': area_code,
+    'callid_name': reseller,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
+    'subscriber_pin': pin
+}
+
+data = get_ns_response_data(parameters, access_token)
+
+parameters = {
+    'object': 'callqueue',
+    'action': "create",
+    'domain': domain,
+    'queue': "2000",
+    'run_stats': "yes",
+    'huntgroup_option': "Ring All",
+    'description': "Sales"
+}
+
+data = get_ns_response_data(parameters, access_token)
+
+parameters = {
+    'object': 'answerrule',
+    'action': "create",
+    'domain': domain,
+    'user': "2000",
+    'time_frame': "*",
+    'priority': "0",
+    'for_parameters': "queue_2000",
+    'for_control': "e",
+    'dnd_enable': "0",
+    'enable': "1",
+    'order': "99"
+    
+    
+}
+data = get_ns_response_data(parameters, access_token)
+
+parameters = {
+    'object': 'dialrule',
+    'action': "create",
+    'domain': domain,
+    'dialplan': domain,
+    'matchrule': "*",
+    'responder': "sip:start@call-queuing",
+    'matchrule': "queue_2000",
+    'to_scheme': "[*]",
+    'to_user': "2000",
+    'to_host': domain,
+    'plan_description': "To Queue"
+    
+}
+data = get_ns_response_data(parameters, access_token)
+
+def add_call_queue_support(reseller, domain, new_did, area_code, pin, access_token):
+  parameters = {
+    'object': 'subscriber',
+    'action': "create",
+    'domain': domain,
+    'scope': "Basic User",
+    'first_name': "Support",
+    'last_name': "Call Queue",
+    'dir_list': "no",
+    'dir_anc': "no",
+    'user': '2001',
+    'srv_code': 'system-queue',
+    'area_code': area_code,
+    'callid_name': reseller,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
+    'subscriber_pin': pin
+  }
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'callqueue',
+    'action': "create",
+    'domain': domain,
+    'queue': "2001",
+    'huntgroup_option': "1stAvail",
+    'run_stats': "yes",
+    'description': "Support"
+  }
+  
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'answerrule',
+    'action': "create",
+    'domain': domain,
+    'user': "2001",
+    'time_frame': "*",
+    'priority': "0",
+    'for_parameters': "queue_2001",
+    'for_control': "e",
+    'dnd_enable': "0",
+    'enable': "1",
+    'order': "99"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'dialrule',
+    'action': "create",
+    'domain': domain,
+    'dialplan': domain,
+    'matchrule': "*",
+    'responder': "sip:start@call-queuing",
+    'matchrule': "queue_2001",
+    'to_scheme': "[*]",
+    'to_user': "2001",
+    'to_host': domain,
+    'plan_description': "To Queue"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  return data
+
+def add_park_1(reseller, domain, new_did, area_code, pin, access_token):
+  parameters = {
+    'object': 'subscriber',
+    'action': "create",
+    'domain': domain,
+    'scope': "Basic User",
+    'first_name': "Call Park",
+    'last_name': "One",
+    'dir_list': "no",
+    'dir_anc': "no",
+    'user': '701',
+    'srv_code': 'system-queue',
+    'area_code': area_code,
+    'callid_name': reseller,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
+    'subscriber_pin': pin
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'callqueue',
+    'action': "create",
+    'domain': domain,
+    'queue': "701",
+    'huntgroup_option': "Call Park",
+    'description': "Call Park One"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'answerrule',
+    'action': "create",
+    'domain': domain,
+    'user': "701",
+    'time_frame': "*",
+    'priority': "0",
+    'for_parameters': "queue_701",
+    'for_control': "e",
+    'dnd_enable': "0",
+    'enable': "1",
+    'order': "99"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+
+  parameters = {
+    'object': 'dialrule',
+    'action': "create",
+    'domain': domain,
+    'dialplan': domain,
+    'matchrule': "*",
+    'responder': "sip:start@call-queuing",
+    'matchrule': "queue_701",
+    'to_scheme': "[*]",
+    'to_user': "701",
+    'to_host': domain,
+    'plan_description': "To Queue"   
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  return data
+
+def add_park_2(reseller, domain, new_did, area_code, pin, access_token):
+  parameters = {
+    'object': 'subscriber',
+    'action': "create",
+    'domain': domain,
+    'scope': "Basic User",
+    'first_name': "Call Park",
+    'last_name': "Two",
+    'dir_list': "no",
+    'dir_anc': "no",
+    'user': '702',
+    'srv_code': 'system-queue',
+    'area_code': area_code,
+    'callid_name': reseller,
+    'callid_nmbr': new_did,
+    'callid_emgr': new_did,
+    'subscriber_pin': pin
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'callqueue',
+    'action': "create",
+    'domain': domain,
+    'queue': "702",
+    'huntgroup_option': "Call Park",
+    'description': "Call Park Two"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'answerrule',
+    'action': "create",
+    'domain': domain,
+    'user': "702",
+    'time_frame': "*",
+    'priority': "0",
+    'for_parameters': "queue_702",
+    'for_control': "e",
+    'dnd_enable': "0",
+    'enable': "1",
+    'order': "99"
+  }
+
+  data = get_ns_response_data(parameters, access_token)
+
+  parameters = {
+    'object': 'dialrule',
+    'action': "create",
+    'domain': domain,
+    'dialplan': domain,
+    'matchrule': "*",
+    'responder': "sip:start@call-queuing",
+    'matchrule': "queue_702",
+    'to_scheme': "[*]",
+    'to_user': "702",
+    'to_host': domain,
+    'plan_description': "To Queue"
+  }
+  
+  data = get_ns_response_data(parameters, access_token)
+
+  return data
+
 def add_preferred_domain(reseller, domain, access_token):
+  pin = [random.randint(0,9) for _ in range(8)]
   tech_department = {'name': 'Tech Department', 'user': 'Tech'}
   sales_department = {'name': 'Sales Department', 'user': 'Sales'}
   add_domain(reseller, domain, access_token)
   add_domain_dial_plan(domain, access_token)
   add_dial_plan_rule_to_table(domain, access_token)
   DID = find_did(access_token)
-  newDID = assign_did(domain, DID, access_token)
-  area_code = add_domain_user(reseller, domain, newDID, access_token)
-  add_department(reseller, domain, newDID, tech_department, access_token)
-  add_department(reseller, domain, newDID, sales_department, access_token)
-  add_reseller_user(reseller, domain, newDID, access_token)
-  add_office_manager_user(reseller, domain, newDID, area_code, access_token)
-  add_supervisor_user(reseller, domain, newDID, area_code, access_token)
-  add_basic_user(reseller, domain, newDID, area_code, access_token)
-  add_route_manager_user(reseller, domain, newDID, area_code, access_token)
-  add_call_queue(reseller, domain, newDID, area_code, access_token)
+  new_did = assign_did(domain, DID, access_token)
+  area_code = add_domain_user(reseller, domain, new_did, pin, access_token)
+  add_department(reseller, domain, new_did, tech_department, pin, access_token)
+  add_department(reseller, domain, new_did, sales_department, pin, access_token)
+  add_reseller_user(reseller, domain, new_did, pin, access_token)
+  add_office_manager_user(reseller, domain, new_did, area_code, pin, access_token)
+  add_supervisor_user(reseller, domain, new_did, area_code, pin, access_token)
+  add_basic_user(reseller, domain, new_did, area_code, pin, access_token)
+  add_route_manager_user(reseller, domain, new_did, area_code, pin, access_token)
+  add_call_queue_sales(reseller, domain, new_did, area_code, pin, access_token)
+  add_call_queue_support(reseller, domain, new_did, area_code, pin, access_token)
+  add_park_1(reseller, domain, new_did, area_code, pin, access_token)
+  add_park_2(reseller, domain, new_did, area_code, pin, access_token)
+
+  domain_credentials = {
+    'new_did': new_did,
+    'pin': pin,
+  }
+
+  return domain_credentials
